@@ -39,7 +39,24 @@ class Knapsack:
         return ks
 
 def solve(availableItems: List, ks: Knapsack) -> int:
-    return 0
+    if len(availableItems) == 0:
+        print(f"Knapsack: {ks.value} {ks.items}")
+        return ks.value    #we did not add anything
+
+    #take first item from the available list
+    item = availableItems[0]
+
+    newKnapsack = ks.copy()
+    #can we add?
+    notAdded = solve(availableItems[1:], newKnapsack)
+
+    if ks.hasRoomFor(item):
+        newKnapsack.addItem(item)
+        added = solve(availableItems[1:], newKnapsack)
+        return max(notAdded, added)
+    
+    else:
+        return notAdded
 
 
 items = [
