@@ -36,10 +36,37 @@ class Knapsack:
     def copy(self):
         ks = Knapsack(self.capacity, self.value)
         ks.items = self.items.copy()
-        return ks
+        return ks75
 
-def solve(availableItems: List, ks: Knapsack) -> int:
-    return 0
+    def isOverfilled(self):
+        totalWeight = 0
+        for item in self.items:
+            totalWeight = item.weight + totalWeight
+        if (totalWeight <= self.capacity):
+            return False
+        else:
+            return True
+
+
+# brute force approach
+def solve(availableItems: List, ks: Knapsack, currentIndex) -> int:
+    if (currentIndex > len(availableItems) - 1):
+        print(ks.items)
+        # if the knapsack is overfilled
+        # we consider it broken --> 0$
+        if(ks.isOverfilled()):
+            return 0
+        else:
+            return ks.value
+    ItemA = availableItems[currentIndex]
+    KnapsackWithoutaItem = ks.copy()
+    ks.addItem(ItemA)
+    ExcludeCurrentItem = solve(availableItems, KnapsackWithoutaItem, currentIndex + 1)
+    IncludeCurrentItem = solve(availableItems, ks, currentIndex + 1)
+    return max(ExcludeCurrentItem, IncludeCurrentItem)
+
+   
+    
 
 
 items = [
@@ -49,4 +76,4 @@ items = [
     Item("D", 4, 5), 
     Item("E", 2, 3)]
 
-print(solve(items, Knapsack(7)))
+print(solve(items, Knapsack(7), 0))
